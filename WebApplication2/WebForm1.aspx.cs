@@ -13,5 +13,22 @@ namespace WebApplication2
 		{
 
 		}
+
+		protected void SqlDataSource2_DataBinding(object sender, EventArgs e)
+		{
+			int a = 0;
+		}
+
+		protected void SqlDataSource2_Selecting(object sender, SqlDataSourceSelectingEventArgs e)
+		{
+			int a = 9;
+
+			e.Command.Parameters[0].Value = GridView1.DataKeys[GridView1.EditIndex].Value;
+		}
+
+		protected void SqlDataSource1_Updating(object sender, SqlDataSourceCommandEventArgs e)
+		{
+			int a = 0;
+		}
 	}
 }
