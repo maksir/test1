@@ -16,27 +16,35 @@
                 <asp:BoundField DataField="ПолноеНаименование" HeaderText="ПолноеНаименование" SortExpression="ПолноеНаименование" />
                 <asp:BoundField DataField="ИНН" HeaderText="ИНН" SortExpression="ИНН" />
                 <asp:BoundField DataField="КПП" HeaderText="КПП" SortExpression="КПП" />
-                <asp:BoundField DataField="ОсновнойДоговор" HeaderText="ОсновнойДоговор" SortExpression="ОсновнойДоговор" />
+                <asp:TemplateField HeaderText="ОсновнойДоговор" SortExpression="ОсновнойДоговор">
+                    <EditItemTemplate>
+                        <asp:DropDownList runat="server" ID="ddl1" DataSourceID="SqlDataSource2" DataTextField="Наименование" DataValueField ="Ид" SelectedValue='<%# Bind("ДоговорИд") %>'></asp:DropDownList>
+                    </EditItemTemplate>
+                    <ItemTemplate>
+                        <asp:Label runat="server" Text='<%# Eval("ОсновнойДоговор") %>' ID="Label1"></asp:Label>
+                    </ItemTemplate>
+                </asp:TemplateField>
+
                 <asp:CommandField ShowEditButton="True" />
             </Columns>
         </asp:GridView>
-        <asp:SqlDataSource ID="SqlDataSource1" runat="server" 
-            ConnectionString="<%$ ConnectionStrings:prog1ConnectionString %>" 
-            SelectCommand="SELECT [Ид] as ИдКонтрагента, [Наименование], [ПолноеНаименование], [ИНН], [КПП], [ОсновнойДоговор] FROM smeh.[Контрагенты] ORDER BY Наименование" 
-            UpdateCommand="UPDATE smeh.Контрагенты SET Наименование = @Наименование, ПолноеНаименование = @ПолноеНаименование, ИНН = @ИНН, КПП = @КПП, ОсновнойДоговор = @ОсновнойДоговор WHERE (Ид = @ИдКонтрагента)"
+        <asp:SqlDataSource ID="SqlDataSource1" runat="server"
+            ConnectionString="<%$ ConnectionStrings:prog1ConnectionString %>"
+            SelectCommand="SELECT Контр.Ид AS ИдКонтрагента, Контр.Наименование, Контр.ПолноеНаименование, Контр.ИНН, Контр.КПП, ОсновнойДоговор as ДоговорИд, Догвр.Наименование AS ОсновнойДоговор FROM smeh.Контрагенты AS Контр LEFT OUTER JOIN smeh.ДоговорыКонтрагентов AS Догвр ON Контр.ОсновнойДоговор = Догвр.Ид ORDER BY Контр.Наименование"
+            UpdateCommand="UPDATE smeh.Контрагенты SET Наименование = @Наименование, ПолноеНаименование = @ПолноеНаименование, ИНН = @ИНН, КПП = @КПП, ОсновнойДоговор = @ДоговорИд WHERE (Ид = @ИдКонтрагента)"
             OnUpdating="SqlDataSource1_Updating1">
             <UpdateParameters>
                 <asp:Parameter Name="Наименование" />
                 <asp:Parameter Name="ПолноеНаименование" />
                 <asp:Parameter Name="ИНН" />
                 <asp:Parameter Name="КПП" />
-                <asp:Parameter Name="ОсновнойДоговор" />
+                <asp:Parameter Name="ДоговорИд" />
                 <asp:Parameter Name="ИдКонтрагента" />
             </UpdateParameters>
         </asp:SqlDataSource>
         <asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:prog1ConnectionString %>" 
             SelectCommand="smeh.[ДоговорыКонтрагента GetListForDropDownList]" 
-            SelectCommandType="StoredProcedure">
+            SelectCommandType="StoredProcedure" OnSelecting="SqlDataSource2_Selecting">
             <SelectParameters>
                 <asp:Parameter DbType="Int32" Name="Ид" />
             </SelectParameters>
