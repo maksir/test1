@@ -9,56 +9,34 @@
 </head>
 <body>
     <form id="form1" runat="server">
-        <div>
-            <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" DataKeyNames="Ид" DataSourceID="SqlDataSource1">
-                <Columns>
-                    <asp:BoundField DataField="Ид" HeaderText="Ид" InsertVisible="False" ReadOnly="True" SortExpression="Ид" Visible="False" />
-                    <asp:TemplateField HeaderText="Наименование" SortExpression="Наименование">
-                        <EditItemTemplate>
-                            <asp:TextBox ID="TextBox1" runat="server" Text='<%# Bind("Наименование") %>'></asp:TextBox>
-                        </EditItemTemplate>
-                        <ItemTemplate>
-                            <asp:Label ID="Label1" runat="server" Text='<%# Bind("Наименование") %>'></asp:Label>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:BoundField DataField="ПолноеНаименование" HeaderText="ПолноеНаименование" SortExpression="ПолноеНаименование" />
-                    <asp:BoundField DataField="ИНН" HeaderText="ИНН" SortExpression="ИНН" />
-                    <asp:BoundField DataField="КПП" HeaderText="КПП" SortExpression="КПП" />
-                    <asp:CheckBoxField DataField="Удален" HeaderText="Удален" SortExpression="Удален" Visible="False" />
-                    <asp:CheckBoxField DataField="Архивный" HeaderText="Архивный" SortExpression="Архивный" Visible="False" />
-                    <asp:TemplateField HeaderText="ОсновнойДоговор" SortExpression="ОсновнойДоговор">
-                        <EditItemTemplate>
-                            <asp:TextBox ID="TextBox2" runat="server" Text='<%# Bind("ОсновнойДоговор") %>'></asp:TextBox>
-                        </EditItemTemplate>
-                        <ItemTemplate>
-                            <asp:Label ID="Label2" runat="server" Text='<%# Eval("ОсновнойДоговор") %>'></asp:Label>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:CommandField ShowEditButton="True" />
-                </Columns>
-            </asp:GridView>
-
-        </div>
-        <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConflictDetection="CompareAllValues"
-            ConnectionString="<%$ ConnectionStrings:prog1ConnectionString %>"
-            SelectCommand="SELECT Ид , Наименование, ПолноеНаименование, ИНН, КПП, Удален, Архивный, ОсновнойДоговор FROM smeh.Контрагенты ORDER BY Наименование"
-            UpdateCommand="UPDATE smeh.Контрагенты SET Наименование = @Наименование, ПолноеНаименование = @ПолноеНаименование, ИНН = @ИНН, КПП = @КПП, Удален = @Удален, Архивный = @Архивный, ОсновнойДоговор = @ОсновнойДоговор WHERE (Ид = @Ид)" OnUpdating="SqlDataSource1_Updating">
+        <asp:GridView ID="GridView1" runat="server" DataSourceID="SqlDataSource1" AutoGenerateColumns="False" DataKeyNames="ИдКонтрагента">
+            <Columns>
+                <asp:BoundField DataField="ИдКонтрагента" HeaderText="ИдКонтрагента" InsertVisible="False" ReadOnly="True" SortExpression="ИдКонтрагента" Visible="false" />
+                <asp:BoundField DataField="Наименование" HeaderText="Наименование" SortExpression="Наименование" />
+                <asp:BoundField DataField="ПолноеНаименование" HeaderText="ПолноеНаименование" SortExpression="ПолноеНаименование" />
+                <asp:BoundField DataField="ИНН" HeaderText="ИНН" SortExpression="ИНН" />
+                <asp:BoundField DataField="КПП" HeaderText="КПП" SortExpression="КПП" />
+                <asp:BoundField DataField="ОсновнойДоговор" HeaderText="ОсновнойДоговор" SortExpression="ОсновнойДоговор" />
+                <asp:CommandField ShowEditButton="True" />
+            </Columns>
+        </asp:GridView>
+        <asp:SqlDataSource ID="SqlDataSource1" runat="server" 
+            ConnectionString="<%$ ConnectionStrings:prog1ConnectionString %>" 
+            SelectCommand="SELECT [Ид] as ИдКонтрагента, [Наименование], [ПолноеНаименование], [ИНН], [КПП], [ОсновнойДоговор] FROM smeh.[Контрагенты] ORDER BY Наименование" 
+            UpdateCommand="UPDATE smeh.Контрагенты SET Наименование = @Наименование, ПолноеНаименование = @ПолноеНаименование, ИНН = @ИНН, КПП = @КПП, ОсновнойДоговор = @ОсновнойДоговор WHERE (Ид = @ИдКонтрагента)"
+            OnUpdating="SqlDataSource1_Updating1">
             <UpdateParameters>
-                <asp:Parameter Name="Наименование" Type="String" />
-                <asp:Parameter Name="ПолноеНаименование" Type="String" />
-                <asp:Parameter Name="ИНН" Type="String" />
-                <asp:Parameter Name="КПП" Type="String" />
-                <asp:Parameter Name="Удален" Type="Boolean" DefaultValue="False" />
-                <asp:Parameter Name="Архивный" Type="Boolean" DefaultValue="False" />
-                <asp:Parameter Name="ОсновнойДоговор" Type="Int32" />
-                <asp:Parameter Name="ИдКонтрагента" Type="Int32" />
+                <asp:Parameter Name="Наименование" />
+                <asp:Parameter Name="ПолноеНаименование" />
+                <asp:Parameter Name="ИНН" />
+                <asp:Parameter Name="КПП" />
+                <asp:Parameter Name="ОсновнойДоговор" />
+                <asp:Parameter Name="ИдКонтрагента" />
             </UpdateParameters>
         </asp:SqlDataSource>
         <asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:prog1ConnectionString %>" 
             SelectCommand="smeh.[ДоговорыКонтрагента GetListForDropDownList]" 
-            SelectCommandType="StoredProcedure" 
-            OnDataBinding="SqlDataSource2_DataBinding" 
-            OnSelecting="SqlDataSource2_Selecting">
+            SelectCommandType="StoredProcedure">
             <SelectParameters>
                 <asp:Parameter DbType="Int32" Name="Ид" />
             </SelectParameters>
